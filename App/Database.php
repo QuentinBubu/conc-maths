@@ -11,7 +11,7 @@ class Database
     private $password;
     private $pdo;
 
-    public function __construct($dns = 'mysql:host=localhost;dbname=c.h.gestion;charset=utf8', $login = 'root', $password = '')
+    public function __construct($dns = 'mysql:host=localhost;dbname=lordcards;charset=utf8', $login = 'root', $password = '')
     {
         $this->login = $login;
         $this->password = $password;

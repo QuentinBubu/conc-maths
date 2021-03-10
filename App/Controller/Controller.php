@@ -12,4 +12,9 @@ class Controller
     {
         $method === 'store' ? Login::store() : Login::create();
     }
+
+    public static function signup($method)
+    {
+        $method === 'store' ? Signup::store() : Signup::create();
+    }
 }

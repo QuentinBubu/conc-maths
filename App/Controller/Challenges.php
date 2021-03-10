@@ -3,14 +3,14 @@ namespace App\Controller;
 
 use App\Views\Base;
 
-class Inscription
+class Challenges
 {
     public static function create()
     {
-        if (!$_SESSION['authorize']['level1']) {
+        if (!$_SESSION['authorize']['level2']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            Base::show('inscription');
+            Base::show('challenges');
         }
     }
 

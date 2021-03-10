@@ -1,12 +1,11 @@
 <?php
-
 namespace App;
 
 class User extends Database
 {
     public $globalAccountInformation;
 
-    private function setNewAccount($username, $password, $passwordConfirm, $location, $service)
+    private function setNewAccount(string $username, string $mail, string $password, string $passwordConfirm)
     {
         $accountNumber =
         $this->getRequest(
@@ -14,7 +13,7 @@ class User extends Database
                 FROM `users`
                 WHERE `username` = :username',
             [
-                'userName' => $username,
+                'username' => $username,
             ],
             'fetchAll'
         );
@@ -41,19 +40,16 @@ class User extends Database
                     'INSERT INTO `users` (
                         `username`,
                         `password`,
-                        `location`,
-                        `service`
+                        `mail`
                     ) VALUES (
                         :username,
                         :password,
-                        :location,
-                        :service
+                        :mail
                     )',
                     [
                         'username' => $username,
                         'password' => password_hash($password, PASSWORD_ARGON2ID),
-                        'location' => $location,
-                        'service' => $service,
+                        'mail' => $mail,
                     ]
                 )
             ) {
@@ -86,9 +82,9 @@ class User extends Database
         }
     }
 
-    public function getNewAccount(string $username, string $password, string $passwordConfirm, string $location, string $service)
+    public function getNewAccount(string $username, string $mail,string $password, string $passwordConfirm)
     {
-        return $this->setNewAccount($username, $password, $passwordConfirm, $location, $service);
+        return $this->setNewAccount($username, $mail, $password, $passwordConfirm);
     }
 
     public function getConnexion(string $username, string $password)

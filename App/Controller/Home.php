@@ -14,10 +14,13 @@ class Home
         }
     }
 
-    public static function store()
+    public static function logout()
     {
-        if (!$_SESSION['authorize']['level1']) {
-            Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
-        }
+        $_SESSION['load'] = false;
+        session_reset();
+        session_unset();
+        session_destroy();
+        header('Location: /');
+        exit('Déconnecté');
     }
 }

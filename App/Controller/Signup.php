@@ -4,14 +4,17 @@ namespace App\Controller;
 use App\User;
 use App\Views\Base;
 
-class Login
+class Signup
 {
     public static function create()
     {
         if (!$_SESSION['authorize']['level1']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
+        } elseif ($_SESSION['authorize']['level2']) {
+            header('Location: /challenges');
+            exit;
         } else {
-            Base::show('login');
+            Base::show('signup');
         }
     }
 
@@ -21,7 +24,7 @@ class Login
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
             $user = new User();
-            $return = $user->getConnexion($_POST['username'], $_POST['password']);
+            $return = $user->getNewAccount($_POST['username'] , $_POST['mail'], $_POST['password'], $_POST['passwordConfirm']);
             if ($return === true) {
                 $_SESSION['authorize']['level2'] = true;
                 $_SESSION['username'] = $_POST['username'];

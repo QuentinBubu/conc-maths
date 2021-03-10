@@ -5,9 +5,11 @@ session_start();
 if (!isset($_SESSION['load'])) {
     $_SESSION = [
         'load' => true,
+        'username' => null,
         'authorize' => [
             'level1' => true,
-            'level2' => false
+            'level2' => false,
+            'level3' => false
         ]
     ];
 }
