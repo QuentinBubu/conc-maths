@@ -6,7 +6,7 @@ if (!isset($_SESSION['load'])) {
     $_SESSION = [
         'load' => true,
         'authorize' => [
-            'level1' => false,
+            'level1' => true,
             'level2' => false
         ]
     ];
@@ -14,6 +14,6 @@ if (!isset($_SESSION['load'])) {
 
 require '../vendor/autoload.php';
 
-require '../App/routes.php';
+require '../App/Router/routes.php';
 
 /* WARNING Code non executé après l'appel à la route */

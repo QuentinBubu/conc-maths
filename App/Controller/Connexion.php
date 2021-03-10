@@ -3,14 +3,14 @@ namespace App\Controller;
 
 use App\Views\Base;
 
-class Home
+class Connexion
 {
     public static function create()
     {
         if (!$_SESSION['authorize']['level1']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            Base::show('home');
+            Base::show('connexion');
         }
     }
 
