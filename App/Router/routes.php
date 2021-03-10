@@ -13,5 +13,9 @@ $router->get('/signup', 'Signup#create');
 $router->post('/signup', 'Signup#store');
 
 $router->get('/challenges', 'Challenges#create');
+$router->post('/challenge', 'Challenges#store');
+
+
+$router->get('/admin', 'Admin#create');
 
 $router->run();

@@ -26,9 +26,7 @@ class Signup
             $user = new User();
             $return = $user->getNewAccount($_POST['username'] , $_POST['mail'], $_POST['password'], $_POST['passwordConfirm']);
             if ($return === true) {
-                $_SESSION['authorize']['level2'] = true;
-                $_SESSION['username'] = $_POST['username'];
-                header('Location: /challenges');
+                header('Location: /login');
                 exit;
             } else {
                 Base::show('error', 457, $return);

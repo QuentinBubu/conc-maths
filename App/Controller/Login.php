@@ -24,6 +24,9 @@ class Login
             $return = $user->getConnexion($_POST['username'], $_POST['password']);
             if ($return === true) {
                 $_SESSION['authorize']['level2'] = true;
+                if ($user->getInformation('type') == 2) {
+                    $_SESSION['authorize']['level3'] = true;
+                }
                 $_SESSION['username'] = $_POST['username'];
                 header('Location: /challenges');
                 exit;
