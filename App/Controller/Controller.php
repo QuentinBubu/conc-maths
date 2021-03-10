@@ -8,8 +8,8 @@ class Controller
         $method === 'store' ? Home::store() : Home::create();
     }
 
-    public static function connexion($method)
+    public static function login($method)
     {
-        $method === 'store' ? Connexion::store() : Connexion::create();
+        $method === 'store' ? Login::store() : Login::create();
     }
 }
