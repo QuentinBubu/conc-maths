@@ -1,7 +1,19 @@
+<?php
+use App\User;
+
+$user = new User();
+$challenges = $user->getRequest(
+    'SELECT `name`
+    FROM `challenges`
+    WHERE `deleted` IS NULL',
+    [],
+    'fetchAll'
+);
+?>
 <div>
     <h2>Créer un challenge</h2>
     <section>
-        <form action="/challenge" method="POST" autocomplete="off">
+        <form action="/challenges" method="POST" autocomplete="off">
             <label for="name">Nom:</label>
             <input type="text" name="name" id="name" placeholder="Le nom" />
             <label for="date">Date de fin:</label>
@@ -20,6 +32,23 @@
             <button>Enregistrer</button>
         </form>
     </section>
+    <h2>Challenges:</h2>
+    <section>
+        <?php
+            foreach ($challenges as $value) {
+                ?>
+                <a
+                    href="/challenges/delete/<?= htmlspecialchars($value['name']) ?>"
+                >Supprimer <?= htmlspecialchars($value['name']) ?></a>
+                 ou 
+                <a
+                    href="/challenges/leadboard/<?= htmlspecialchars($value['name']) ?>"
+                >voir la leadboard de <?= htmlspecialchars($value['name']) ?></a>
+                <?php
+            }
+        ?>
+    </section>
+    <a href="/logout">Se déconnecter</a>
 </div>
 
 <style>

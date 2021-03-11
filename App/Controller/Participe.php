@@ -3,19 +3,44 @@ namespace App\Controller;
 
 use App\User;
 use App\Views\Base;
-use Exception;
 
-class Challenges
+class Participe
 {
-    public static function create()
+    public static function create($challengeName)
     {
-        if ($_SESSION['authorize']['level3']) {
-            header('Location: /admin');
-            exit;
-        } elseif (!$_SESSION['authorize']['level2']) {
+        if (!$_SESSION['authorize']['level1']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            Base::show('challenges');
+            $user = new User();
+            if (
+                array_key_exists(
+                    $user->getRequest(
+                        'SELECT `id`
+                        FROM `users`
+                        WHERE `username` = :username',
+                        [
+                            'username' => $_SESSION['username']
+                        ],
+                        'fetch'
+                    )['id'],
+                    json_decode(
+                        $user->getRequest(
+                            'SELECT `participant`
+                            FROM `challenges`
+                            WHERE `name` = :name',
+                            [
+                                'name' => $challengeName
+                            ],
+                            'fetch'
+                        )['participant'],
+                        true
+                    )
+                )
+            ) {
+                Base::show('error', 403, 'Vous avez déjà participé au challenge!');
+            } else {
+                Base::show('participe', null, $challengeName);
+            }
         }
     }
 
@@ -47,44 +72,6 @@ class Challenges
                     'name' => $_POST['name'],
                     'content' => json_encode($_POST),
                     'expiration' => $_POST['date']
-                ]
-            );
-            header('Location: /admin');
-            exit;
-        }
-    }
-
-    public function leadboard(string $name)
-    {
-        if (!$_SESSION['authorize']['level3']) {
-            Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
-        } else {
-            $user = new User();
-            $leadboard = $user->getRequest(
-                'SELECT `participant`
-            FROM `challenges`
-            WHERE `name` = :name',
-                [
-                'name' => $name
-            ],
-                'fetch'
-            )['participant'];
-            Base::show('leadboard', null, $leadboard);
-        }
-    }
-
-    public function delete(string $name)
-    {
-        if (!$_SESSION['authorize']['level3']) {
-            Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
-        } else {
-            $user = new User();
-            $user->getRequest(
-                'UPDATE `challenges`
-                SET `deleted` = 1
-                WHERE `name` = :name',
-                [
-                    'name' => $name
                 ]
             );
             header('Location: /admin');
