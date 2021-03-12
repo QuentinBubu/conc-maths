@@ -8,7 +8,7 @@ class Participe
 {
     public static function create($challengeName)
     {
-        if (!$_SESSION['authorize']['level1']) {
+        if (!$_SESSION['authorize']['level2']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
             $user = new User();
@@ -44,38 +44,63 @@ class Participe
         }
     }
 
-    public static function store()
+    public static function store($challengeName)
     {
-        if (!$_SESSION['authorize']['level3']) {
+        if (!$_SESSION['authorize']['level2']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            foreach ($_POST as $arrays) {
-                if (is_array($arrays)) {
-                    foreach ($arrays as $value) {
-                        if (empty($value)) {
-                            Base::show('error', 458, 'Veuillez saisir tout les champs!');
-                        }
-                    }
+            $user = new User();
+            $content = json_decode(
+                    $user->getRequest(
+                    'SELECT `content`
+                    FROM `challenges`
+                    WHERE `name` = :name
+                    AND `deleted` IS NULL',
+                    [
+                        'name' => $challengeName
+                    ],
+                    'fetch'
+                )['content'],
+                true
+            );
+            $question = $content['question'];
+            $reply = $content['reply'];
+            $result = [
+                'true' => [],
+                'false' => [],
+                'result' => 0
+            ];
+
+            foreach ($_POST as $key => $value) {
+                if (strtolower($value) === strtolower($reply[$key])) {
+                    $result['result'] += 1;
+                    array_push($result['true'], [$question[$key] => $reply[$key]]);
                 } else {
-                    if (empty($arrays)) {
-                        Base::show('error', 458, 'Veuillez saisir tout les champs!');
-                    }
+                    array_push($result['false'], [$question[$key] => $reply[$key]]);
                 }
             }
-            $user = new User();
-            $user->getRequest(
-                'INSERT INTO `challenges`
-                VALUES (
-                    NULL, :name, :content, "{}", :expiration, NULL
-                )',
+
+            $id = $user->getRequest(
+               'SELECT `id`
+                FROM `users`
+                WHERE `username` = :username',
                 [
-                    'name' => $_POST['name'],
-                    'content' => json_encode($_POST),
-                    'expiration' => $_POST['date']
+                    'username' => $_SESSION['username']
+                ],
+                'fetch'
+            )['id'];
+
+            $user->getRequest(
+                'UPDATE `challenges`
+                SET `participant` = JSON_MERGE_PATCH(`participant`, :json)
+                WHERE `name` = :name
+                AND `deleted` IS NULL',
+                [
+                    'json' => json_encode([$id => $result['result']]),
+                    'name' => $challengeName
                 ]
             );
-            header('Location: /admin');
-            exit;
+            Base::show('results', null, json_encode($result));
         }
     }
 }

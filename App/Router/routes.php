@@ -19,6 +19,7 @@ $router->post('/challenges', 'Challenges#store');
 
 
 $router->get('/participe/:id', 'Participe#create');
+$router->post('/participe/:id', 'Participe#store');
 
 $router->get('/admin', 'Admin#create');
 
