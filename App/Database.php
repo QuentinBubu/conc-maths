@@ -11,14 +11,14 @@ class Database
     private $password;
     private $pdo;
 
-    public function __construct($dns = 'mysql:host=localhost;dbname=lordcards;charset=utf8', $login = 'root', $password = '')
+    public function __construct()
     {
-        $this->login = $login;
-        $this->password = $password;
-        $this->dns = $dns;
+        $this->login = $_ENV['DB_USERNAME'];
+        $this->password = $_ENV['DB_PASSWORD'];
+        $this->dns = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_NAME'] . ';charset=utf8;port=' . $_ENV['DB_PORT'];
         $this->setPDO();
     }
-    
+
     private function setPDO()
     {
         if ($this->pdo === null) {

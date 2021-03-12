@@ -1,5 +1,6 @@
 <?php
 
+require '../vendor/autoload.php';
 session_start();
 
 if (!isset($_SESSION['load'])) {
@@ -14,7 +15,10 @@ if (!isset($_SESSION['load'])) {
     ];
 }
 
-require '../vendor/autoload.php';
+$repository = Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()->make();
+$dotenv = Dotenv\Dotenv::create($repository, '../');
+$dotenv->load();
+$dotenv->required(['DB_USERNAME', 'DB_PASSWORD', 'DB_NAME', 'DB_HOST', 'DB_PORT']);
 
 require '../App/Router/routes.php';
 

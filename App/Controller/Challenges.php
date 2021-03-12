@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\User;
 use App\Views\Base;
-use Exception;
 
 class Challenges
 {
