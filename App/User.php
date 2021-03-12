@@ -3,12 +3,12 @@ namespace App;
 
 class User extends Database
 {
-    public $globalAccountInformation;
+    protected $globalAccountInformation;
 
     private function setNewAccount(string $username, string $mail, string $password, string $passwordConfirm)
     {
         $accountNumber =
-        $this->getRequest(
+        self::getRequest(
             'SELECT *
                 FROM `users`
                 WHERE `username` = :username',
@@ -36,7 +36,7 @@ class User extends Database
             return 'Votre identifiant doit contenir au moins 3 caractères inclus!';
         } else {
             if (
-                $this->getRequest(
+                self::getRequest(
                     'INSERT INTO `users` (
                         `username`,
                         `password`,
@@ -62,7 +62,7 @@ class User extends Database
 
     private function setConnexion(string $username, string $password)
     {
-        $request = $this->getRequest(
+        $request = self::getRequest(
             'SELECT *
             FROM `users`
             WHERE `username` = :username',

@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\User;
 use App\Views\Base;
 
 class Admin

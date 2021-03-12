@@ -1,8 +1,7 @@
 <?php
-use App\User;
+use App\Database;
 
-$user = new User();
-$challenges = $user->getRequest(
+$challenges = Database::getRequest(
     'SELECT *
     FROM `challenges`
     WHERE `expiration` > NOW()
@@ -11,7 +10,7 @@ $challenges = $user->getRequest(
     'fetchAll'
 );
 
-$userId = $user->getRequest(
+$userId = Database::getRequest(
     'SELECT `id`
     FROM `users`
     WHERE `username` = :username',
@@ -37,11 +36,11 @@ foreach ($challenges as $value) {
 
 <?php
     if (!empty($challengesParticipe['no'])) {
-        foreach ($challengesParticipe['no'] as $value) {
+        foreach ($challengesParticipe['no'] as $value):
             ?>
             <a href="/participe/<?= htmlspecialchars($value) ?>">Participer au challenge <?= htmlspecialchars($value) ?></a>
             <?php
-        }
+        endforeach;
     } else {
         echo 'Aucun challenge disponible! Revenez plus tard!';
     }

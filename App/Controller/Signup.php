@@ -24,7 +24,7 @@ class Signup
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
             $user = new User();
-            $return = $user->getNewAccount($_POST['username'] , $_POST['mail'], $_POST['password'], $_POST['passwordConfirm']);
+            $return = $user->getNewAccount($_POST['username'], $_POST['mail'], $_POST['password'], $_POST['passwordConfirm']);
             if ($return === true) {
                 header('Location: /login');
                 exit;

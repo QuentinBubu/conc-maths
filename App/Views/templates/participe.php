@@ -1,18 +1,17 @@
 <?php
-use App\User;
+use App\Database;
 
-$user = new User();
 $content = json_decode(
-        $user->getRequest(
-        'SELECT `content`
+    Database::getRequest(
+            'SELECT `content`
         FROM `challenges`
         WHERE `name` = :name
         AND `deleted` IS NULL',
-        [
+            [
             'name' => $message
         ],
-        'fetch'
-    )['content'],
+            'fetch'
+        )['content'],
     true
 );
 $question = $content['question'];
@@ -20,12 +19,12 @@ $question = $content['question'];
 
 <form action="/participe/<?= $message ?>" method="post">
     <?php
-        foreach ($question as $key => $value) {
+        foreach ($question as $key => $value):
             ?>
                 <label for="<?= $key ?>"><?= $value ?></label>
                 <input type="text" name="<?= $key ?>" id="<?= $key ?>" />
             <?php
-        }
+        endforeach;
     ?>
     <button>Envoyer mes réponses</button>
 </form>

@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\User;
+use App\Database;
 use App\Views\Base;
 
 class Participe
@@ -11,10 +11,9 @@ class Participe
         if (!$_SESSION['authorize']['level2']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            $user = new User();
             if (
                 array_key_exists(
-                    $user->getRequest(
+                    Database::getRequest(
                         'SELECT `id`
                         FROM `users`
                         WHERE `username` = :username',
@@ -24,7 +23,7 @@ class Participe
                         'fetch'
                     )['id'],
                     json_decode(
-                        $user->getRequest(
+                        Database::getRequest(
                             'SELECT `participant`
                             FROM `challenges`
                             WHERE `name` = :name',
@@ -49,18 +48,17 @@ class Participe
         if (!$_SESSION['authorize']['level2']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            $user = new User();
             $content = json_decode(
-                    $user->getRequest(
-                    'SELECT `content`
+                Database::getRequest(
+                        'SELECT `content`
                     FROM `challenges`
                     WHERE `name` = :name
                     AND `deleted` IS NULL',
-                    [
+                        [
                         'name' => $challengeName
                     ],
-                    'fetch'
-                )['content'],
+                        'fetch'
+                    )['content'],
                 true
             );
             $question = $content['question'];
@@ -80,8 +78,8 @@ class Participe
                 }
             }
 
-            $id = $user->getRequest(
-               'SELECT `id`
+            $id = Database::getRequest(
+                'SELECT `id`
                 FROM `users`
                 WHERE `username` = :username',
                 [
@@ -90,7 +88,7 @@ class Participe
                 'fetch'
             )['id'];
 
-            $user->getRequest(
+            Database::getRequest(
                 'UPDATE `challenges`
                 SET `participant` = JSON_MERGE_PATCH(`participant`, :json)
                 WHERE `name` = :name

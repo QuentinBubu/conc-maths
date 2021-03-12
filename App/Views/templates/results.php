@@ -9,14 +9,14 @@
         </thead>
         <tbody>
             <?php
-                foreach (json_decode($message, true)['true'] as $key => $value) {
+                foreach (json_decode($message, true)['true'] as $key => $value):
                     ?>
                         <tr>
                             <td><?= key($value) ?></td>
                             <td><?= $value[key($value)] ?></td>
                         </tr>
                     <?php
-                }
+                endforeach;
             ?>
         </tbody>
     </table>
@@ -30,14 +30,14 @@
         </thead>
         <tbody>
             <?php
-                foreach (json_decode($message, true)['false'] as $value) {
+                foreach (json_decode($message, true)['false'] as $value):
                     ?>
                         <tr>
                             <td><?= key($value) ?></td>
                             <td><?= $value[key($value)] ?></td>
                         </tr>
                     <?php
-                }
+                endforeach;
             ?>
         </tbody>
     </table>

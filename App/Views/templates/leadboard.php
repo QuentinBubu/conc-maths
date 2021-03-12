@@ -1,12 +1,10 @@
 <?php
-use App\User;
+use App\Database;
 
 $message = json_decode($message, true);
-uasort($message, function($a, $b) {if ($a === $b) {return 0;} return ($a > $b) ? -1 : 1;});
 
-$user = new User();
 $usersId = "'". implode("','", array_keys($message)) . "'";
-$users = $user->getRequest(
+$users = Database::getRequest(
     "SELECT `username`, `id`
     FROM `users`
     WHERE `id`
@@ -20,6 +18,9 @@ foreach ($users as $value) {
     $message[$value['username']] = $message[$value['id']];
     unset($message[$value['id']]);
 }
+
+arsort($message);
+
 ?>
 <div>
     <table>
@@ -31,14 +32,14 @@ foreach ($users as $value) {
         </thead>
         <tbody>
             <?php
-                foreach ($message as $key => $value) {
+                foreach ($message as $key => $value):
                     ?>
                         <tr>
                             <td><?= $key ?></td>
                             <td><?= $value ?></td>
                         </tr>
                     <?php
-                }
+                endforeach;
             ?>
         </tbody>
     </table>

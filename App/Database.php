@@ -6,36 +6,25 @@ use Exception;
 
 class Database
 {
-    private $dns;
-    private $login;
-    private $password;
-    private $pdo;
-
-    public function __construct()
+    private static function setPDO()
     {
-        $this->login = $_ENV['DB_USERNAME'];
-        $this->password = $_ENV['DB_PASSWORD'];
-        $this->dns = 'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_NAME'] . ';charset=utf8;port=' . $_ENV['DB_PORT'];
-        $this->setPDO();
-    }
-
-    private function setPDO()
-    {
-        if ($this->pdo === null) {
-            try {
-                $pdo = new PDO($this->dns, $this->login, $this->password);
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $this->pdo = $pdo;
-            } catch (Exception $e) {
-                echo 'Exception reçue : ' . $e->getMessage() . "\n";
-            }
+        try {
+            $pdo = new PDO(
+                'mysql:host=' . $_ENV['DB_HOST'] . ';dbname=' . $_ENV['DB_NAME'] . ';charset=utf8;port=' . $_ENV['DB_PORT'],
+                $_ENV['DB_USERNAME'],
+                $_ENV['DB_PASSWORD']
+            );
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $pdo;
+        } catch (Exception $e) {
+            echo 'Exception reçue : ' . $e->getMessage() . "\n";
         }
     }
 
-    private function request($request, $values, $type)
+    private static function request($request, $values, $type)
     {
         try {
-            $request = $this->pdo->prepare($request);
+            $request = self::setPDO()->prepare($request);
             $request->execute($values);
             if ($type === 'fetchAll') {
                 return $request->fetchAll(PDO::FETCH_ASSOC);
@@ -49,8 +38,8 @@ class Database
         }
     }
 
-    public function getRequest($request, $values, $type = '')
+    public static function getRequest($request, $values, $type = '')
     {
-        return $this->request($request, $values, $type);
+        return self::request($request, $values, $type);
     }
 }

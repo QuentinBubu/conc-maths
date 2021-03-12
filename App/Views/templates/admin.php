@@ -1,8 +1,7 @@
 <?php
-use App\User;
+use App\Database;
 
-$user = new User();
-$challenges = $user->getRequest(
+$challenges = Database::getRequest(
     'SELECT `name`
     FROM `challenges`
     WHERE `deleted` IS NULL',
@@ -35,7 +34,7 @@ $challenges = $user->getRequest(
     <h2>Challenges:</h2>
     <section>
         <?php
-            foreach ($challenges as $value) {
+            foreach ($challenges as $value):
                 ?>
                 <a
                     href="/challenges/delete/<?= htmlspecialchars($value['name']) ?>"
@@ -45,7 +44,7 @@ $challenges = $user->getRequest(
                     href="/challenges/leadboard/<?= htmlspecialchars($value['name']) ?>"
                 >voir la leadboard de <?= htmlspecialchars($value['name']) ?></a>
                 <?php
-            }
+            endforeach;
         ?>
     </section>
     <a href="/logout">Se déconnecter</a>

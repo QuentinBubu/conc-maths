@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\User;
+use App\Database;
 use App\Views\Base;
 
 class Challenges
@@ -36,8 +36,7 @@ class Challenges
                     }
                 }
             }
-            $user = new User();
-            $user->getRequest(
+            Database::getRequest(
                 'INSERT INTO `challenges`
                 VALUES (
                     NULL, :name, :content, "{}", :expiration, NULL
@@ -58,14 +57,13 @@ class Challenges
         if (!$_SESSION['authorize']['level3']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            $user = new User();
-            $leadboard = $user->getRequest(
+            $leadboard = Database::getRequest(
                 'SELECT `participant`
-            FROM `challenges`
-            WHERE `name` = :name',
+                FROM `challenges`
+                WHERE `name` = :name',
                 [
                 'name' => $name
-            ],
+                ],
                 'fetch'
             )['participant'];
             Base::show('leadboard', null, $leadboard);
@@ -77,8 +75,7 @@ class Challenges
         if (!$_SESSION['authorize']['level3']) {
             Base::show('error', 403, 'Vous n\'êtes pas autorisé à rentrer sur cette page.');
         } else {
-            $user = new User();
-            $user->getRequest(
+            Database::getRequest(
                 'UPDATE `challenges`
                 SET `deleted` = 1
                 WHERE `name` = :name',
